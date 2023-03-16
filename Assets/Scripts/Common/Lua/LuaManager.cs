@@ -7,16 +7,8 @@ using XLua;
 
 namespace DG
 {
-    public class LuaManager : ManagerBase
+    public static class LuaManager
     {
-        static LuaManager instance;
-        LuaManager() { }
-        public static LuaManager Create(object caller)
-        {
-            Debug.Assert(caller.GetType() == typeof(Main), "Only Main can call this method once!");
-            instance = new LuaManager();
-            return instance;
-        }
         /// <summary>
         ///  Lua文件根目录
         /// </summary>
@@ -24,39 +16,30 @@ namespace DG
         /// <summary>
         /// Lua文件缓存
         /// </summary>
-        private Dictionary<string, byte[]> LuaScriptsDict = new Dictionary<string, byte[]>();
-        /// <summary>
-        /// lua Start委托
-        /// </summary>
-        [CSharpCallLua]
-        public delegate void LuaStartAction(LuaTable luaTable);
+        private static Dictionary<string, byte[]> LuaScriptsDict = new Dictionary<string, byte[]>();
         /// <summary>
         /// lua Update委托
         /// </summary>
         [CSharpCallLua]
-        public delegate void LuaUpdateAction(LuaTable luaTable, float time);
-        //public delegate void LuaUpdateAction(LuaTable luaTable, float time, float deltaTime, float realTime, int frameCount);
+        public static Action luaUpdateAction;
 
-        public LuaEnv Env;
+        public static LuaEnv Env;
 
-        public override void Init()
+        public static void Init()
         {
             Env = new LuaEnv();
             Env.AddLoader(OnLoader);
             InitScripts();
         }
 
-        public void LuaStart()
+        public static void LuaStart()
         {
             var table = Env.DoString("return require 'GameStart'")[0] as LuaTable;
-            LuaStartAction luaStartAction = table.Get<LuaStartAction>("Start");
-            LuaUpdateAction luaUpdateAction = table.Get<LuaUpdateAction>("Update");
-            luaStartAction(table);
-            luaUpdateAction(table, 0f);
-            //luaUpdateAction(table, Time.time, Time.deltaTime, Time.realtimeSinceStartup, Time.frameCount);
+            table.Get("Update", out luaUpdateAction);
+            luaUpdateAction();
         }
 
-        void InitScripts()
+        static void InitScripts()
         {
 #if !USE_AB
             var trimCount = LUA_PATH_NAME.Length + 1;
@@ -69,15 +52,20 @@ namespace DG
 #endif
         }
 
-        public override void Update()
+        public static void Update()
         {
-            //LuaUpdateAction(Time.time, Time.deltaTime, Time.realtimeSinceStartup, Time.frameCount);
+            luaUpdateAction();
         }
 
-        private byte[] OnLoader(ref string filepath)
+        private static byte[] OnLoader(ref string filepath)
         {
             LuaScriptsDict.TryGetValue(filepath, out byte[] scriptBytes);
             return scriptBytes;
+        }
+
+        public static void Print()
+        {
+            Debug.Log("Print");
         }
     }
 }

@@ -4,20 +4,9 @@ using UnityEngine;
 
 namespace DG
 {
-    public class ResourceManager : ManagerBase
+    public static class ResourceManager
     {
-        static ResourceManager instance;
-        ResourceManager() { }
-        public static ResourceManager Create(object caller)
-        {
-            Debug.Assert(caller.GetType() != typeof(Main), "Only Main can call this method once!");
-            instance = new ResourceManager();
-            return instance;
-        }
-
-
-        // Update is called once per frame
-        public override void Update()
+        public static void Update()
         {
 
         }

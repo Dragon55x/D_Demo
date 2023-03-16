@@ -1,15 +1,15 @@
+require ("Global.GlobalDefine")
+
 local GameStart = {}
 
 function GameStart:Start()
-    print("Hello World!!")
+    LuaManager.Print()
 end
 
--- function GameStart:Update(time, deltaTime, realTime, frameCount)
---     print(time.." "..deltaTime.." "..realTime.." "..frameCount)
--- end
-
-function GameStart:Update(time)
-    print("Update")
+function GameStart:Update()
+    
 end
+
+GameStart:Start()
 
 return GameStart
