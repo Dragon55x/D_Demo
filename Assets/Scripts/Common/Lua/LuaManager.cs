@@ -7,16 +7,8 @@ using XLua;
 
 namespace DG
 {
-    public class LuaManager : ManagerBase
+    public class LuaManager : ManagerBase<LuaManager>
     {
-        static LuaManager instance;
-        LuaManager() { }
-        public static LuaManager Create(object caller)
-        {
-            Debug.Assert(caller.GetType() == typeof(Main), "Only Main can call this method once!");
-            instance = new LuaManager();
-            return instance;
-        }
         /// <summary>
         ///  Lua文件根目录
         /// </summary>
@@ -26,16 +18,10 @@ namespace DG
         /// </summary>
         private Dictionary<string, byte[]> LuaScriptsDict = new Dictionary<string, byte[]>();
         /// <summary>
-        /// lua Start委托
-        /// </summary>
-        [CSharpCallLua]
-        public delegate void LuaStartAction(LuaTable luaTable);
-        /// <summary>
         /// lua Update委托
         /// </summary>
         [CSharpCallLua]
-        public delegate void LuaUpdateAction(LuaTable luaTable, float time);
-        //public delegate void LuaUpdateAction(LuaTable luaTable, float time, float deltaTime, float realTime, int frameCount);
+        public Action LuaUpdateAction;
 
         public LuaEnv Env;
 
@@ -49,11 +35,8 @@ namespace DG
         public void LuaStart()
         {
             var table = Env.DoString("return require 'GameStart'")[0] as LuaTable;
-            LuaStartAction luaStartAction = table.Get<LuaStartAction>("Start");
-            LuaUpdateAction luaUpdateAction = table.Get<LuaUpdateAction>("Update");
-            luaStartAction(table);
-            luaUpdateAction(table, 0f);
-            //luaUpdateAction(table, Time.time, Time.deltaTime, Time.realtimeSinceStartup, Time.frameCount);
+            table.Get("Update", out LuaUpdateAction);
+            LuaUpdateAction();
         }
 
         void InitScripts()
@@ -71,7 +54,7 @@ namespace DG
 
         public override void Update()
         {
-            //LuaUpdateAction(Time.time, Time.deltaTime, Time.realtimeSinceStartup, Time.frameCount);
+            LuaUpdateAction();
         }
 
         private byte[] OnLoader(ref string filepath)

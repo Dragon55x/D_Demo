@@ -6,8 +6,8 @@ namespace DG
 {
     public class Main : MonoBehaviour
     {
-        List<ManagerBase> ManagerList;
-
+        LuaManager mLuaMgr;
+        ResourceManager mResourceMgr;
 
         private void Awake()
         {
@@ -17,65 +17,35 @@ namespace DG
 
         void InitMgrs()
         {
-            ManagerList = new List<ManagerBase>();
+            mLuaMgr = LuaManager.Instance;
+            mResourceMgr = ResourceManager.Instance;
+
+            mLuaMgr.Init();
+            mResourceMgr.Init();
         }
 
         void StartGame()
         {
-            LuaMgr.LuaStart();
+            mLuaMgr.LuaStart();
         }
 
         private void Update()
         {
-            foreach(ManagerBase mgr in ManagerList)
-            {
-                mgr.Update();
-            }
+            mLuaMgr.Update();
+            mResourceMgr.Update();
         }
 
         private void LateUpdate()
         {
-            foreach (ManagerBase mgr in ManagerList)
-            {
-                mgr.LateUpdate();
-            }
+            mLuaMgr.LateUpdate();
+            mResourceMgr.LateUpdate();
         }
 
         private void OnDestroy()
         {
-            foreach (ManagerBase mgr in ManagerList)
-            {
-                mgr.OnDestroy();
-            }
+            mLuaMgr.OnDestroy();
+            mResourceMgr.OnDestroy();
         }
 
-        LuaManager luaMgr;
-        LuaManager LuaMgr
-        {
-            get
-            {
-                if (luaMgr == null)
-                {
-                    luaMgr = LuaManager.Create(this);
-                    luaMgr.Init();
-                    ManagerList.Add(luaMgr);
-                }
-                return luaMgr;
-            }
-        }
-
-        ResourceManager resourceManager;
-        ResourceManager ResourceManager
-        {
-            get
-            {
-                if (resourceManager == null)
-                {
-                    resourceManager = ResourceManager.Create(this);
-                    ManagerList.Add(luaMgr);
-                }
-                return resourceManager;
-            }
-        }
     }
 }
