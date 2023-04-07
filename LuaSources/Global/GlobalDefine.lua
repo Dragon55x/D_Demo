@@ -1,5 +1,6 @@
 GameTime = require("Global.GameTime")
 TimeManager = require("Common.TimeManager")
+UIMnager = require("Common.UIManager")
 
 function Class(className ,baseClass)
     local cls = {className = className}
