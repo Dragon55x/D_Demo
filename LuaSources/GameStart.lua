@@ -1,4 +1,3 @@
-require ("Global.GlobalDefine")
 local GameStart = {}
 
 function GameStart:Start()
@@ -15,11 +14,13 @@ function GameStart:Update()
 end
 
 function GameStart:InitModules()
-    
+    require ("Global.GlobalDefine")
+
+    DataManager:init()
 end
 
 function GameStart:StartLogin()
-    
+
 end
 
 GameStart:Start()

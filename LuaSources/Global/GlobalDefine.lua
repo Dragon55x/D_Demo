@@ -1,6 +1,7 @@
 GameTime = require("Global.GameTime")
 TimeManager = require("Common.TimeManager")
-UIMnager = require("Common.UIManager")
+UIManager = require("Common.UIManager")
+DataManager = require("Common.DataManager")
 
 function Class(className ,baseClass)
     local cls = {className = className}
@@ -31,6 +32,7 @@ function Class(className ,baseClass)
         
         return instance
     end
+    cls.Create = cls.New
 
     return cls
 end

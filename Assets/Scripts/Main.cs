@@ -16,8 +16,6 @@ namespace DG
         {   
             InitMgrs();
             StartGame();
-            
-            TestFunc();
         }
 
         void InitMgrs()
@@ -50,27 +48,6 @@ namespace DG
         {
             mLuaMgr.OnDestroy();
             mResourceMgr.OnDestroy();
-        }
-
-        void TestFunc()
-        {
-            StartCoroutine(SendGetRequest());
-        }
-
-        IEnumerator SendGetRequest()
-        {
-            UnityWebRequest uwr = UnityWebRequest.Get("http://www.baidu.com");
-            yield return uwr.SendWebRequest();
-            if (uwr.isHttpError || uwr.isNetworkError)
-            {
-                Debug.Log(uwr.error);
-            }
-            else //请求成功
-            {
-                Debug.Log(uwr.result);
-                Debug.Log("Get:请求成功");
-                Debug.Log("下载的数据：" + uwr.downloadedBytes);
-            }
         }
     }
 }
