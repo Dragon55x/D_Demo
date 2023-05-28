@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelEditManager : MonoBehaviour
 {
+    Transform _uiRoot;
     Transform _setLevelNode;
     Transform _operateNode;
 
@@ -25,11 +28,14 @@ public class LevelEditManager : MonoBehaviour
 
     void Awake()
     {
-        _setLevelNode = GameObject.Find("UI_Root/UICanvas/SetLevel").transform;
-        _operateNode = GameObject.Find("UI_Root/UICanvas/Operate").transform;
+        _uiRoot = GameObject.Find("UI_Root").transform;
+        _setLevelNode = _uiRoot.Find("UICanvas/SetLevel").transform;
+        _operateNode = _uiRoot.Find("UICanvas/Operate").transform;
 
         InitLevelConfig();
         OpenSetLevel(true);
+
+        Test();
     }
 
     void InitLevelConfig() {
@@ -60,6 +66,15 @@ public class LevelEditManager : MonoBehaviour
     public void SaveLevelConfig()
     {
 
+    }
+
+    private void Test()
+    {
+        Button _openAssetBtn = _uiRoot.Find("UICanvas/Open_Asset_Btn").GetComponent<Button>();
+        _openAssetBtn.onClick.AddListener(() =>
+        {
+            AssetDatabase.OpenAsset(AssetDatabase.LoadMainAssetAtPath("Assets/Prefab/UI_Root.prefab"));
+        });
     }
 }
 
