@@ -13,7 +13,8 @@ namespace DG
         ResourceManager mResourceMgr;
 
         private void Awake()
-        {   
+        {
+            DontDestroyOnLoad(gameObject);
             InitMgrs();
             StartGame();
         }

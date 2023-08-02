@@ -20,7 +20,7 @@ function GameStart:InitModules()
 end
 
 function GameStart:StartLogin()
-
+    print("HelloWorld")
 end
 
 GameStart:Start()

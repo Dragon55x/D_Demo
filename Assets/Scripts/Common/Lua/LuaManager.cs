@@ -9,17 +9,9 @@ namespace DG
 {
     public class LuaManager : ManagerBase<LuaManager>
     {
-        /// <summary>
-        ///  Lua文件根目录
-        /// </summary>
         public const string LUA_PATH_NAME = "LuaSources";
-        /// <summary>
-        /// Lua文件缓存
-        /// </summary>
         private Dictionary<string, byte[]> LuaScriptsDict = new Dictionary<string, byte[]>();
-        /// <summary>
-        /// lua Update委托
-        /// </summary>
+
         [CSharpCallLua]
         public Action LuaUpdateAction;
 
